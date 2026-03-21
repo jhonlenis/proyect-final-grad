@@ -1,5 +1,5 @@
 // cspell:disable
-import { NextResponse } from 'next/server';
+//import { NextResponse } from 'next/server';
 import mysql from 'mysql2/promise';
 import bcrypt from 'bcryptjs';
 import { RowDataPacket } from 'mysql2';
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
 
     if (rows.length === 0) {
       await connection.end();
-      return NextResponse.json({ error: "Usuario no encontrado." }, { status: 401 });
+      return Response.json({ error: "Usuario no encontrado." }, { status: 401 });
     }
 
     const usuario = rows[0];
@@ -47,12 +47,12 @@ export async function POST(request: Request) {
     const match = await bcrypt.compare(password, usuario.password_hash);
     if (!match) {
       await connection.end();
-      return NextResponse.json({ error: "Contraseña incorrecta." }, { status: 401 });
+      return Response.json({ error: "Contraseña incorrecta." }, { status: 401 });
     }
 
     await connection.end();
 
-    return NextResponse.json({ 
+    return Response.json({ 
       message: "Login exitoso",
       user: { 
         id: usuario.id,
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
     const err = error as MySqlError;
     console.error("Error en login:", err.message);
 
-    return NextResponse.json(
+    return Response.json(
       { error: "Error en el servidor: " + (err.message || "Error desconocido") }, 
       { status: 500 }
     );

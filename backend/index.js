@@ -12,6 +12,7 @@ const { resetPassword } = require('./api/resetContrasena');
 const { newPassword } = require('./api/newPassword');
 const { obtenerInscripciones, inscripciones } = require('./api/inscripciones');
 const { chatbot } = require('./api/chatbot');
+const { ObtenerProgramasUser } = require('./api/programas');
 
 const app = express();
 app.use(express.json());
@@ -28,9 +29,9 @@ app.get('/', async (req, res) => {
   const mensaje = "hola desde ruta principal"
   try {
     return res.status(200).json({
-        success: true,
-        message: mensaje
-      });
+      success: true,
+      message: mensaje
+    });
   } catch (error) {
     console.error("Error en el servidor:", error);
     res.status(500).json({
@@ -186,16 +187,36 @@ app.post('/api/inscripciones', async (req, res) => {
 });
 
 app.post('/api/chatbot', async (req, res) => {
-  const { mensaje, usuarioActual } = req.body; // Aquí es donde obtienes los datos del body
+  const { mensaje, userId } = req.body; // Aquí es donde obtienes los datos del body
 
   try {
-    const resultado = await chatbot(mensaje, usuarioActual);
+    const resultado = await chatbot(mensaje, userId);
     res.json(resultado);
+    console.log("mensaje:", mensaje);
+    console.log("userId:", userId);
+
+
   } catch (error) {
     res.status(500).json({ success: false, respuesta: "Error en el servidor" });
   }
 });
 
+app.get('/api/programas', async (req, res) => {
+  try {
+    const resultado = await ObtenerProgramasUser();
+    res.status(200).json(resultado);
+
+    return { data: resultado, success: true };
+
+
+  } catch (error) {
+    console.error("Error al extraer los programas:", error);
+    res.status(500).json({
+      success: false,
+      respuesta: "Error al extraer los programas"
+    });
+  }
+});
 
 // --- ARRANCAR SERVIDOR ---
 const PORT = 9000;

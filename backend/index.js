@@ -12,7 +12,7 @@ const { resetPassword } = require('./api/resetContrasena');
 const { newPassword } = require('./api/newPassword');
 const { obtenerInscripciones, inscripciones } = require('./api/inscripciones');
 const { chatbot } = require('./api/chatbot');
-const { ObtenerProgramasUser } = require('./api/programas');
+const { ObtenerProgramasUser, obtenerDetallesPrograma } = require('./api/programas');
 
 const app = express();
 app.use(express.json());
@@ -229,6 +229,21 @@ app.get('/api/search', async (req, res) => {
     res.status(500).json({
       success: false,
       respuesta: "Error al buscar programas"
+    });
+  }
+});
+
+app.get('/api/detallesPrograma', async (req, res) => {
+  const { id } = req.query;
+
+  try {
+    const resultado = await obtenerDetallesPrograma(id);
+    res.status(200).json(resultado);
+  } catch (error) {
+    console.error("Error al obtener detalles del programa:", error);
+    res.status(500).json({
+      success: false,
+      respuesta: "Error al obtener detalles del programa"
     });
   }
 });

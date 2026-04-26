@@ -23,6 +23,7 @@ interface Programa {
   id: number;
   nombre: string;
   sector: string;
+  descripcion: string;
 }
 
 export default function DashboardPage() {

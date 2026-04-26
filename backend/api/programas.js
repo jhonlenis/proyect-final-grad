@@ -20,6 +20,21 @@ async function ObtenerProgramasUser() {
 
 }
 
+
+async function obtenerDetallesPrograma(programaId) {
+  try {
+    const connection = await mysql.createConnection(dbConfig);
+    const [rows] = await connection.execute('SELECT * FROM programas WHERE id = ?', [programaId]);
+    await connection.end();
+    return rows[0];
+  } catch (error) {
+    console.error("Error al obtener detalles del programa:", error);
+    throw error;
+  }
+}
+
+//exportaciones globales de esta API
 module.exports = {
-  ObtenerProgramasUser
+  ObtenerProgramasUser,
+  obtenerDetallesPrograma
 }
